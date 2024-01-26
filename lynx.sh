@@ -73,7 +73,7 @@ echo -e "\033[1;33mRun \033[1;34mlynxcli run\033[1;34m \033[1;33mto run it \033[
 echo -e "\033[1;33mRun \033[1;34mlynxcli config\033[1;34m \033[1;33mto change configuration\033[1;0m"
 fi
 if [[ "$1" == "update" ]]; then
-echo "\033[1;31mWarning!! Your config file will be reset. It is recommended that you have your information saved elsewhere too.\033[1;0m"
+echo -e "\033[1;31mWarning!! Your config file will be reset. It is recommended that you have your information saved elsewhere too.\033[1;0m"
     echo "To confirm the update, type 'confirm update': "
     read -r confirm_update
     if [[ "$confirm_update" == "confirm update" ]]; then
