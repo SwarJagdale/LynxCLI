@@ -1,2 +1,6 @@
-GOOGLE_API_KEY=YOUR_GOOGLE_API_KEY
+GOOGLE_API_KEY=AIzaSyAO3zRLi7phJen5dMDAX-l79WJfMyPc26g
+Google_temperature=0.8
+Google_maxOutputTokens=800
+Google_topP=0.8
+Google_topK=10
 OPENAI_API_KEY=YOUR_OPENAI_API_KEY
