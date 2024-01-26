@@ -73,7 +73,7 @@ echo -e "\033[1;33mRun \033[1;34mlynxcli run\033[1;34m \033[1;33mto run it \033[
 echo -e "\033[1;33mRun \033[1;34mlynxcli config\033[1;34m \033[1;33mto change configuration\033[1;0m"
 fi
 if [[ "$1" == "update" ]]; then
-echo "\033[1;33mWarning!! Your config file will be reset. It is recommended that you have your information saved elsewhere too.\033[1;0m"
+echo "\033[1;31mWarning!! Your config file will be reset. It is recommended that you have your information saved elsewhere too.\033[1;0m"
     echo "To confirm the update, type 'confirm update': "
     read -r confirm_update
     if [[ "$confirm_update" == "confirm update" ]]; then
@@ -151,7 +151,7 @@ if [[ "$1" == "config" ]]; then
         fi
     else
         echo -e "\033[1;31mUsage: lynxcli config <parameter> <value>\033[0m"
-        echo -e "\033[1;36mTo view your config file run lynxcli config Show\ 033[0m"
+        echo -e "\033[1;36mTo view your config file run lynxcli config Show \033[0m"
         echo -e "\033[1;36mFor Google run lynxcli config Google \033[0m"
         echo -e "\033[1;36mFor OpenAI run lynxcli config Openai \033[0m"
     fi
