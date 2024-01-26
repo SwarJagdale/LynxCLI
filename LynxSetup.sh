@@ -14,7 +14,14 @@ if [ $? -eq 0 ]; then
     find "$REPO_DIR" -type f -name "*.sh" -exec chmod +x {} \;
 
     # Create an alias for running ./lynx.sh as 'lynxcli'
+   
+    if ! grep -q "alias lynxcli='$REPO_DIR/lynx.sh'" ~/.bashrc; then
+   
     echo "alias lynxcli='$REPO_DIR/lynx.sh'" >> ~/.bashrc
+    echo "Alias 'lynxcli' appended to ~/.bashrc."
+else
+    echo "Alias 'lynxcli' already exists in ~/.bashrc. Skipping."
+fi
 
     source ~/.bashrc
 
