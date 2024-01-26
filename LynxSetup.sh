@@ -10,7 +10,7 @@ if [ $? -eq 0 ]; then
     echo "Repository cloned successfully."
     
     # Create an alias for running ./lynx.sh as 'lynxcli'
-    echo "alias lynxcli=$REPO_DIR/lynx.sh'" >> ~/.bashrc
+    echo "alias lynxcli='$REPO_DIR/lynx.sh'" >> ~/.bashrc
 
     source ~/.bashrc
 
