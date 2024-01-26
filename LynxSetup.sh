@@ -12,11 +12,7 @@ git clone "$REPO_URL" "$REPO_DIR"
 # Check if the repository was cloned successfully
 if [ $? -eq 0 ]; then
     echo "Repository cloned successfully."
-
-    # Set up environment variable
-    echo "export LYNX_REPO_DIR=$(pwd)/$REPO_DIR" >> ~/.bashrc
-    source ~/.bashrc
-
+    
     # Create an alias for running ./lynx.sh as 'lynxcli'
     echo "alias lynxcli='\"$(pwd)/$REPO_DIR\"/lynx.sh'" >> ~/.bashrc
 
