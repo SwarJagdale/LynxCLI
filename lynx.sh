@@ -116,8 +116,140 @@ if [[ "$1" == "run" ]];then
         echo -e "\033[1;33mRun \033[1;34mlynxcli run openai\033[1;34m \033[1;33mto run OpenAI's API \033[0m"
         fi
     if [[ "$2" == "openai" ]]; then
-        echo -e "\033[1;33mFunctionality for OpenAI is coming soon!\033[1;0m"
+        openai_api=$(grep -Eo 'OPENAI_API_KEY=[^ ]+' "$CONFIG_FILE" | cut -d'=' -f2)
+        Openai_temperature=$(grep -Eo 'Openai_temperature=[^ ]+' "$CONFIG_FILE" | cut -d'=' -f2)
+        Openai_maxTokens=$(grep -Eo 'Openai_maxTokens=[^ ]+' "$CONFIG_FILE" | cut -d'=' -f2)
+        Openai_model=$(grep -Eo 'Openai_model=[^ ]+' "$CONFIG_FILE" | cut -d'=' -f2)
+        echo -e "\033[33mRunning OpenAI...\033[33m"
+        echo
+        choice=0
+         while [ $choice -eq 0 ]; do
+            echo -n -e "\033[1;35m>>\033[1;35m"
+            echo -n -e "\033[32m\033[32m"
+            read -r prompt
+            echo -n -e "\033[33mThinking...\033[33m"
+         
+            response=$(curl -s https://api.openai.com/v1/chat/completions \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $openai_api" \
+            -d '{
+                "model": "'"$Openai_model"'",
+                "messages": [{"role": "user", "content": "'"$prompt"'"}],
+                "temperature": '"$Openai_temperature"',
+                "max_tokens": '"$Openai_maxTokens"'
+            }')
+            echo -n -e "\r\033[K"
+         
+            if command -v jq &> /dev/null; then
+                text=$(echo "$response" | jq -r '.choices[0].message.content')
+                if [ "$text" != "null" ]; then
+                    echo -n -e "\033[1;34mOpenAI: \033[1;34m"
+                    while IFS= read -r -d $'\n' line; do
+                        if [[ "$line" == '```'* ]]; then
+                            continue
+                        fi
+                        IFS=' ' read -r -a words <<< "$line"
+
+                        for word in "${words[@]}"; do
+                            echo -n -e "\033[33m$word \033[33m"
+                            sleep 0.05
+                        done
+
+                        echo
+                    done <<< "$text"
+                else
+                    if [[ "$response" == *"Invalid API key"* ]]; then
+                        echo -e "\033[1;31mError: API key is not valid. Please pass a valid API key. Configure your API Key by running lynxcli config Openai <YOUR_API_KEY> or by configuring OPENAI_API_KEY in .lynx_config file. \n\033[35mYou can get your api key at \033[35m\033[33mhttps://platform.openai.com/api-keys\033[33m\033[0m"
+                    else
+                        echo -e "\033[1;33m$response\033[1;33m"
+                    fi
+                fi
+            else
+                echo "jq is not installed. Please install jq to process the response."
+                echo -e "\033[1;33m$response\033[1;33m"
+            fi
+        
+         echo
+
+            buffer 1
+        done
+        echo -n -e "\033[0m\033[0m"
+
         fi
+    if [[ "$2" == "openai_conv" ]];then
+        openai_api=$(grep -Eo 'OPENAI_API_KEY=[^ ]+' "$CONFIG_FILE" | cut -d'=' -f2)
+        Openai_temperature=$(grep -Eo 'Openai_temperature=[^ ]+' "$CONFIG_FILE" | cut -d'=' -f2)
+        Openai_maxTokens=$(grep -Eo 'Openai_maxTokens=[^ ]+' "$CONFIG_FILE" | cut -d'=' -f2)
+        Openai_model=$(grep -Eo 'Openai_model=[^ ]+' "$CONFIG_FILE" | cut -d'=' -f2)
+        echo -e "\033[33mRunning OpenAI...\033[33m"
+        echo
+        conversation=()
+        choice=0
+         while [ $choice -eq 0 ]; do
+            echo -n -e "\033[1;35m>>\033[1;35m"
+            echo -n -e "\033[32m\033[32m"
+            read -r prompt
+            echo -n -e "\033[33mThinking...\033[33m"
+      
+            conversation+=("{\"role\": \"user\", \"content\": \"$(echo "$prompt")\"}")
+
+            content=""
+            for i in "${conversation[@]}"; do
+                content+="$i"
+            done
+            echo "$content"
+            echo "$conversation"
+           response=$(curl -s https://api.openai.com/v1/chat/completions \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $openai_api" \
+            -d '{
+                "model": "'"$Openai_model"'",
+                "messages": ['"$content"'],
+                "temperature": '"$Openai_temperature"',
+                "max_tokens": '"$Openai_maxTokens"'
+            }')
+            echo -n -e "\r\033[K"
+
+             if command -v jq &> /dev/null; then
+                text=$(echo "$response" | jq -r '.choices[0].message.content')
+                conversation+=(", {\"role\": \"assistant\", \"content\": \""$text"\"}, ")
+                
+                if [ "$text" != "null" ]; then
+                    echo -n -e "\033[1;34mOpenAI: \033[1;34m"
+                    
+                    while IFS= read -r -d $'\n' line; do
+                        if [[ "$line" == '```'* ]]; then
+                            continue
+                        fi
+                        IFS=' ' read -r -a words <<< "$line"
+
+                        for word in "${words[@]}"; do
+                            echo -n -e "\033[33m$word \033[33m"
+                            sleep 0.05
+                        done
+
+                        echo
+                    done <<< "$text"
+                else
+                    if [[ "$response" == *"Invalid API key"* ]]; then
+                        echo -e "\033[1;31mError: API key is not valid. Please pass a valid API key. Configure your API Key by running lynxcli config Openai <YOUR_API_KEY> or by configuring OPENAI_API_KEY in .lynx_config file. \n\033[35mYou can get your api key at \033[35m\033[33mhttps://platform.openai.com/api-keys\033[33m\033[0m"
+                    else
+                        echo -e "\033[1;33m$response\033[1;33m"
+                    fi
+                fi
+            else
+                echo "jq is not installed. Please install jq to process the response."
+                echo -e "\033[1;33m$response\033[1;33m"
+            fi
+        
+         echo
+
+            buffer 1
+        done
+        echo -n -e "\033[0m\033[0m"
+
+        fi
+
     if  [[ "$2" == "gemini" ]]; then
         gemini_api_key=$(read_api_key)   #"YOUR_API_KEY"
         Google_temperature=$(grep -Eo 'Google_temperature=[^ ]+' "$CONFIG_FILE" | cut -d'=' -f2)
@@ -232,16 +364,16 @@ if [[ "$1" == "run" ]];then
             response=$(curl -s -H 'Content-Type: application/json' \
                 -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${gemini_api_key}" \
                 -d '{
-      "contents": [
-    '"$content"'
-      ],
-      "safety_settings": [
-        {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT","threshold": "BLOCK_NONE"},
-        {"category": "HARM_CATEGORY_HATE_SPEECH","threshold": "BLOCK_NONE"},
-        {"category": "HARM_CATEGORY_HARASSMENT","threshold": "BLOCK_NONE"},
-        {"category": "HARM_CATEGORY_DANGEROUS_CONTENT","threshold": "BLOCK_NONE"}
-      ],
-         "generationConfig": {
+        "contents": [
+        '"$content"'
+        ],
+        "safety_settings": [
+            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT","threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_HATE_SPEECH","threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_HARASSMENT","threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT","threshold": "BLOCK_NONE"}
+        ],
+            "generationConfig": {
                         "stopSequences": ["Title"],
                         "temperature": '"$Google_temperature"',
                         "maxOutputTokens": '"$Google_maxOutputTokens"',
