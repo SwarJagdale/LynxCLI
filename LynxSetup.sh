@@ -17,8 +17,9 @@ if [ $? -eq 0 ]; then
     echo "export LYNX_REPO_DIR=$(pwd)/$REPO_DIR" >> ~/.bashrc
     source ~/.bashrc
 
-    # Create an alias for running ./lynx.sh as 'lynx'
-    echo "alias lynxcli='\$(pwd)/$REPO_DIR\/lynx.sh'" >> ~/.bashrc
+    # Create an alias for running ./lynx.sh as 'lynxcli'
+    echo "alias lynxcli='\"$(pwd)/$REPO_DIR\"/lynx.sh'" >> ~/.bashrc
+
     source ~/.bashrc
 
     echo "Environment variable and alias set up. You can now use 'lynxcli' to run ./lynx.sh."
