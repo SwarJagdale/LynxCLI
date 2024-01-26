@@ -4,7 +4,7 @@
 REPO_URL="https://github.com/SwarJagdale/LynxCLI.git"
 
 # Directory where the repository will be cloned
-REPO_DIR="$HOME/LynxCLI
+REPO_DIR="$HOME/LynxCLI"
 
 # Clone the GitHub repository
 git clone "$REPO_URL" "$REPO_DIR"
