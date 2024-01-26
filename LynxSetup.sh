@@ -1,12 +1,8 @@
 #!/bin/bash
-
-# Your GitHub repository URL
 REPO_URL="https://github.com/SwarJagdale/LynxCLI.git"
-
-# Directory where the repository will be cloned
+#Directory where lynxCLI will be saved
 REPO_DIR="$HOME/LynxCLI"
 
-# Clone the GitHub repository
 git clone "$REPO_URL" "$REPO_DIR"
 
 # Check if the repository was cloned successfully
