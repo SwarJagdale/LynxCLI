@@ -18,10 +18,10 @@ if [ $? -eq 0 ]; then
     source ~/.bashrc
 
     # Create an alias for running ./lynx.sh as 'lynx'
-    echo "alias lynx='cd \$LYNX_REPO_DIR && ./lynx.sh'" >> ~/.bashrc
+    echo "alias lynxcli='cd \$LYNX_REPO_DIR && ./lynx.sh'" >> ~/.bashrc
     source ~/.bashrc
 
-    echo "Environment variable and alias set up. You can now use 'lynx' to run ./lynx.sh."
+    echo "Environment variable and alias set up. You can now use 'lynxcli' to run ./lynx.sh."
 
 else
     echo "Error: Cloning repository failed."
