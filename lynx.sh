@@ -32,11 +32,56 @@ read_api_key() {
     return 1
 }
 
+update_lynxcli() {
+    REPO_URL="https://github.com/SwarJagdale/LynxCLI.git"
+    REPO_DIR="$HOME/LynxCLI"
+
+    # Check if the repository directory exists
+    if [ -d "$REPO_DIR" ]; then
+        # Repository directory exists, so delete it
+
+        rm -rf "$REPO_DIR"
+    fi
+
+    # Clone the GitHub repository
+    echo "Updating to the latest version..."
+    git clone "$REPO_URL" "$REPO_DIR"
+
+    # Check if the repository was cloned successfully
+    if [ $? -eq 0 ]; then
+        echo "Updated successfully."
+
+        # Make all shell scripts executable within the repository directory
+        find "$REPO_DIR" -type f -name "*.sh" -exec chmod +x {} \;
+
+        # Update alias for running ./lynx.sh as 'lynxcli'
+        echo "alias lynxcli='$REPO_DIR/lynx.sh'" > ~/.bashrc
+
+        source ~/.bashrc
+
+        echo "Environment variable and alias updated. You can now use 'lynxcli' to run ./lynx.sh."
+
+    else
+        echo "Error: Cloning repository failed."
+    fi
+}
+
+
 echo
 if [[ "$1" == "" ]]; then
 echo -e "\033[1;33mRun \033[1;34mlynxcli run\033[1;34m \033[1;33mto run it \033[1;33m"
 echo -e "\033[1;33mRun \033[1;34mlynxcli config\033[1;34m \033[1;33mto change configuration\033[1;0m"
 fi
+if [[ "$1" == "update" ]]; then
+    echo "To confirm the update, type 'confirm update':"
+    read -r confirm_update
+    if [[ "$confirm_update" == "confirm update" ]]; then
+        update_lynxcli
+    else
+        echo "Update canceled."
+    fi
+fi
+
 if [[ "$1" == "config" ]]; then
     if [[ "$2" == "Show" ]]; then
 	echo -e -n "\033[1;35mConfiguration File is shown below:\n\n\033[1;35m"
