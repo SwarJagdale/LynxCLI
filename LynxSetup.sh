@@ -12,7 +12,9 @@ if [ $? -eq 0 ]; then
     
     # Make all shell scripts executable within the repository directory
     find "$REPO_DIR" -type f -name "*.sh" -exec chmod +x {} \;
-
+if [ ! -f '~/.bashrc' ]; then
+touch ~/.bashrc
+fi
     # Create an alias for running ./lynx.sh as 'lynxcli'
    
     if ! grep -q "alias lynxcli='$REPO_DIR/lynx.sh'" ~/.bashrc; then
